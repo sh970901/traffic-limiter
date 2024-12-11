@@ -1,5 +1,6 @@
 package com.blog4j.limiter.service;
 
+import com.blog4j.limiter.frame.context.LimiterContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -13,7 +14,6 @@ public class ActiveRoomService {
     private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
 
     public Mono<Boolean> isActiveUser(String userId) {
-        String activeRoomKey = "Active-Room:" + userId;
-        return reactiveRedisTemplate.hasKey(activeRoomKey);
+        return reactiveRedisTemplate.hasKey(LimiterContext.ACTIVE_ROOM + userId);
     }
 }

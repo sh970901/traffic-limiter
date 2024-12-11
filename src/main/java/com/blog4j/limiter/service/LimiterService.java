@@ -3,6 +3,7 @@ package com.blog4j.limiter.service;
 
 import com.blog4j.limiter.frame.config.RateLimiterConfig;
 import com.blog4j.limiter.dto.LimiterResponse;
+import com.blog4j.limiter.frame.context.LimiterContext;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.ConsumptionProbe;
@@ -46,7 +47,7 @@ public class LimiterService {
              */
             Long order = userOrder(userId);
 
-            if (order == -1L){
+            if (order == LimiterContext.NO_ORDER){
                 return waitingRoomService.registerWaitingRoom(userId).map(LimiterResponse::wait);
             }
             else {
@@ -89,7 +90,7 @@ public class LimiterService {
     }
 
     private ConsumptionProbe consumeToken(Bucket bucket) {
-        return bucket.tryConsumeAndReturnRemaining(1);
+        return bucket.tryConsumeAndReturnRemaining(LimiterContext.TOKEN_CONSUME_COUNT);
     }
 
     private void loggingConsumption(String remoteAddrKey, ConsumptionProbe probe) {

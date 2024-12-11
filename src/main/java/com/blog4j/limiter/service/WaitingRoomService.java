@@ -1,5 +1,6 @@
 package com.blog4j.limiter.service;
 
+import com.blog4j.limiter.frame.context.LimiterContext;
 import jakarta.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.Instant;
@@ -20,9 +21,9 @@ public class WaitingRoomService {
 
     public Mono<Long> userOrder(String userId){
         return reactiveRedisTemplate.opsForZSet()
-                                    .rank("Waiting-Room", userId)
+                                    .rank(LimiterContext.WAITING_ROOM, userId)
                                     .map(i -> i >= 0 ? i + 1 : i)
-                                    .defaultIfEmpty(-1L); // 존재하지 않으면 -1 반환
+                                    .defaultIfEmpty(LimiterContext.NO_ORDER); // 존재하지 않으면 -1 반환
 
     }
     public Mono<Long> registerWaitingRoom(final String userId){
@@ -30,10 +31,10 @@ public class WaitingRoomService {
         long now = nowInstantSecond();
 
         return reactiveRedisTemplate.opsForZSet()
-                                    .add("Waiting-Room", userId, now)
+                                    .add(LimiterContext.WAITING_ROOM, userId, now)
                                     .filter(i -> i)
                                     .switchIfEmpty(Mono.error(new Exception("already register user . . . .")))
-                                    .flatMap(i -> reactiveRedisTemplate.opsForZSet().rank("Waiting-Room", userId))
+                                    .flatMap(i -> reactiveRedisTemplate.opsForZSet().rank(LimiterContext.WAITING_ROOM, userId))
                                     .map(i -> i >= 0 ? i + 1 : i);
     }
 
@@ -41,18 +42,17 @@ public class WaitingRoomService {
     public Mono<Long> moveActiveRoom(final int count){
 
         return reactiveRedisTemplate.opsForZSet()
-                                    .popMin("Waiting-Room", count) // ZSet에서 멤버 제거
+                                    .popMin(LimiterContext.WAITING_ROOM, count) // ZSet에서 멤버 제거
                                     .flatMap(member ->
                                         // 2. Active-Room에 Key-Value 형태로 추가하고 TTL 설정
                                         reactiveRedisTemplate.opsForValue()
-                                                             .set("Active-Room:" + member.getValue(), String.valueOf(member.getScore()), Duration.ofMinutes(5))
+                                                             .set(LimiterContext.ACTIVE_ROOM + member.getValue(), String.valueOf(member.getScore()), Duration.ofMinutes(5))
                                     )
                                     .count(); // 이동된 멤버 수 반환
     }
 
     public Mono<Boolean> isExistWaitingUser() {
-        String waitingRoomKey = "Waiting-Room";
-        return reactiveRedisTemplate.hasKey(waitingRoomKey);
+        return reactiveRedisTemplate.hasKey(LimiterContext.WAITING_ROOM);
     }
 
     @PostConstruct
