@@ -2,7 +2,7 @@ package com.blog4j.limiter.service;
 
 
 import com.blog4j.limiter.frame.config.RateLimiterConfig;
-import com.blog4j.limiter.dto.LimiterResponse;
+import com.blog4j.limiter.dto.LimiterResult;
 import com.blog4j.limiter.frame.context.LimiterContext;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.BucketConfiguration;
@@ -28,7 +28,7 @@ public class LimiterService {
     private final ProxyManager<String> proxyManager;
 
     private final ConcurrentMap<String, Bucket> buckets = new ConcurrentHashMap<>();
-    public Mono<LimiterResponse> limitTraffic(String userId) {
+    public Mono<LimiterResult> limitTraffic(String userId) {
 
         /**
          * 1. 활성큐에 있는지
@@ -36,7 +36,7 @@ public class LimiterService {
          * 3. 레이트리미터 적용
          */
 
-        if (inActiveRoom(userId)) return Mono.just(LimiterResponse.success());
+        if (inActiveRoom(userId)) return Mono.just(LimiterResult.pass());
 
         // 대기큐에 값이 있다면
         if (inWaitingRoom(userId)){
@@ -48,10 +48,10 @@ public class LimiterService {
             Long order = userOrder(userId);
 
             if (order == LimiterContext.NO_ORDER){
-                return waitingRoomService.registerWaitingRoom(userId).map(LimiterResponse::wait);
+                return waitingRoomService.registerWaitingRoom(userId).map(LimiterResult::wait);
             }
             else {
-                return Mono.just(LimiterResponse.wait(order));
+                return Mono.just(LimiterResult.wait(order));
             }
         }
         else {
@@ -63,9 +63,9 @@ public class LimiterService {
             boolean result = rateLimiter("guest");
 
             if (!result) {
-                return waitingRoomService.registerWaitingRoom(userId).map(LimiterResponse::wait);
+                return waitingRoomService.registerWaitingRoom(userId).map(LimiterResult::wait);
             }
-            return Mono.just(LimiterResponse.success());
+            return Mono.just(LimiterResult.pass());
         }
     }
 
