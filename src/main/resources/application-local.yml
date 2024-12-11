@@ -1,0 +1,9 @@
+spring:
+  main:
+    banner-mode: off
+  cache:
+    type: redis
+  redis:
+    cache:
+      host: 127.0.0.1
+      port: 6379
