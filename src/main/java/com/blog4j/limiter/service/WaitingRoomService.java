@@ -55,6 +55,9 @@ public class WaitingRoomService {
         return reactiveRedisTemplate.hasKey(LimiterContext.WAITING_ROOM);
     }
 
+    /**
+     * 배치는 따로 서버 분리 필요
+     */
     @PostConstruct
     public void scheduler(){
         startActiveQueueProcessor(10, 1);
