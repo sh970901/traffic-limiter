@@ -16,7 +16,7 @@ public class LimiterController {
      private final LimiterService limiterService;
     @GetMapping("/{userId}")
     public Mono<?> limiter(@PathVariable(name = "userId") String userId){
-
+        System.out.println("##여기 찍힘");
         return limiterService.limitTraffic(userId);
     }
 
