@@ -35,14 +35,16 @@
     <br/>
 </div>
 <script>
+    fetchWaitingRank();
+
     function fetchWaitingRank() {
-        const queue = '[[${queue}]]';
-        const userId = '[[${userId}]]';
-        const queryParam = new URLSearchParams({queue: queue, user_id: userId});
-        fetch('/api/v1/limiter/?' + queryParam)
+        // const queue = '[[${queue}]]';
+        const userId = getCookie("userId");
+        // const queryParam = new URLSearchParams({queue: queue, user_id: userId});
+        fetch('/api/v1/limiter/' + userId)
             .then(response => response.json())
-            .then(data => {
-                if(data.rank < 0) {
+            .then(result => {
+                if(result.data.order === 0) {
                     document.querySelector('#number').innerHTML = 0;
                     document.querySelector('#updated').innerHTML = new Date();
 
@@ -50,13 +52,20 @@
                     window.location.href = newUrl;
                     return;
                 }
-                document.querySelector('#number').innerHTML = data.rank;
+                document.querySelector('#number').innerHTML = result.data.order;
                 document.querySelector('#updated').innerHTML = new Date();
             })
             .catch(error => console.error(error));
     }
 
     setInterval(fetchWaitingRank, 3000);
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
 </script>
 </body>
 </html>

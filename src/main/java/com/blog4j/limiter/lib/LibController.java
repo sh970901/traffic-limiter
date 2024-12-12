@@ -3,6 +3,7 @@ package com.blog4j.limiter.lib;
 
 import com.blog4j.limiter.dto.LimiterResult;
 import com.blog4j.limiter.frame.respose.CommonResponse;
+import com.blog4j.limiter.frame.util.RandomStringGenerator;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,13 +55,14 @@ public class LibController {
     }
 
     private String generateUserId() {
-        return String.valueOf(System.currentTimeMillis());
+        return RandomStringGenerator.generateRandomString(10);
+//        return String.valueOf(System.currentTimeMillis());
     }
 
 
     private CommonResponse checkUserAccess(String userId) {
         return webClient.get()
-                .uri("/v1/limiter/{userId}", userId) // URL에 PathVariable 설정
+                .uri("/api/v1/limiter/{userId}", userId) // URL에 PathVariable 설정
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<CommonResponse<LimiterResult>>() {})
                 .block();
