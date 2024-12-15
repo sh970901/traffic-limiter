@@ -1,5 +1,8 @@
 package com.blog4j.limiter.frame.config;
 
+import com.blog4j.limiter.dto.GateInfo;
+import com.blog4j.limiter.frame.context.LimiterContext;
+import com.blog4j.limiter.frame.event.Events;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.Refill;
@@ -11,11 +14,14 @@ import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -45,17 +51,28 @@ public class RateLimiterConfig {
      */
     public BucketConfiguration getBucketConfiguration(String userGroup) {
         Map<String, Bandwidth> dynamicPolicies = new HashMap<>();
+        for (GateInfo gateInfo : LimiterContext.gateInfos){
+            dynamicPolicies.put(gateInfo.getGateId(), gateInfo.getBandwidth());
+        }
+//        dynamicPolicies.put("guest1", Bandwidth.classic(50, Refill.intervally(50, Duration.ofSeconds(1))));
 
-        dynamicPolicies.put("guest3", Bandwidth.builder().capacity(3).refillGreedy(3, Duration.ofSeconds(1)).build());
-        // 사용자 그룹별 정책 // 이 부분을 설정 값에서 가져오면 좋을 듯
-        dynamicPolicies.put("guest1", Bandwidth.classic(50, Refill.intervally(50, Duration.ofSeconds(1))));
-        dynamicPolicies.put("guest2", Bandwidth.classic(20, Refill.intervally(20, Duration.ofSeconds(1))));
-        dynamicPolicies.put("guest", Bandwidth.classic(5, Refill.intervally(5, Duration.ofSeconds(1))));
-
-        Bandwidth bandwidth = dynamicPolicies.getOrDefault(userGroup, Bandwidth.classic(5, Refill.intervally(5, Duration.ofSeconds(1))));
+        Bandwidth bandwidth = dynamicPolicies.getOrDefault(userGroup, Bandwidth.builder().capacity(3).refillGreedy(3, Duration.ofSeconds(1)).build());
 
         return BucketConfiguration.builder()
                                   .addLimit(bandwidth)
                                   .build();
+    }
+
+    @Bean
+    public InitializingBean gateInfoInitializer() {
+        /**
+         * 설정 DB에서 받아오도록 수정 필요
+         */
+        List<GateInfo> gateInfos = new ArrayList<>();
+        Bandwidth bandwidth =  Bandwidth.builder().capacity(3).refillGreedy(3, Duration.ofSeconds(1)).build();
+        GateInfo gateInfo = GateInfo.from().gateId("12345").bandwidth(bandwidth).build();
+        gateInfos.add(gateInfo);
+
+        return ()-> LimiterContext.initGateInfos(gateInfos);
     }
 }

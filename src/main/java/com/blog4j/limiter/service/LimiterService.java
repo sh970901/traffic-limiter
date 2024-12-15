@@ -61,7 +61,7 @@ public class LimiterService {
              * RateLimiter 적용 후 넘치는 값을 대기큐로
              */
 
-            boolean result = rateLimiter("guest3");
+            boolean result = rateLimiter(gateId);
 
             if (!result) {
                 return waitingRoomService.registerWaitingRoom(gateId, userId).map(LimiterResult::wait);

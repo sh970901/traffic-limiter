@@ -41,18 +41,20 @@
         // const queue = '[[${queue}]]';
         const userId = getCookie("userId");
         // const queryParam = new URLSearchParams({queue: queue, user_id: userId});
-        fetch('/api/v1/limiter/12345/' + userId)
+        fetch('/api/v1/limiter/order/12345/' + userId)
             .then(response => response.json())
             .then(result => {
-                if(result.data.order === 0) {
-                    document.querySelector('#number').innerHTML = 0;
+                console.log(result)
+                // if(result.data.order === 0) {
+                if(result.data === 0) {
                     document.querySelector('#updated').innerHTML = new Date();
-
                     const newUrl = window.location.origin + window.location.pathname + window.location.search;
                     window.location.href = newUrl;
                     return;
                 }
-                document.querySelector('#number').innerHTML = result.data.order;
+                document.querySelector('#number').innerHTML = result.data;
+                // document.querySelector('#number').innerHTML = result.data.order;
+
                 document.querySelector('#updated').innerHTML = new Date();
             })
             .catch(error => console.error(error));

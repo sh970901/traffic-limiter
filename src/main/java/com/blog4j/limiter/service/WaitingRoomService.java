@@ -1,5 +1,6 @@
 package com.blog4j.limiter.service;
 
+import com.blog4j.limiter.dto.GateInfo;
 import com.blog4j.limiter.frame.context.LimiterContext;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -61,13 +62,18 @@ public class WaitingRoomService {
      */
     @PostConstruct
     public void scheduler(){
-        startActiveQueueProcessor(5, 1);
+        for (GateInfo gateInfo :LimiterContext.gateInfos){
+            String gateId = gateInfo.getGateId();
+//            startActiveQueueProcessor(5, 1, gateId);
+        }
+        startActiveQueueProcessor(5, 1, "12345");
     }
 
-    private void startActiveQueueProcessor(int second, int users) {
+    private void startActiveQueueProcessor(int second, int users, String gateId) {
+
         // 1초마다 10건씩 이동
         Flux.interval(Duration.ofSeconds(second))
-            .flatMap(tick -> moveActiveRoom("12345", users)
+            .flatMap(tick -> moveActiveRoom(gateId, users)
                 .doOnNext(count -> log.info("Moved " + count + " users to Active-Room"))
                 .onErrorResume(error -> {
                     log.info("Error while moving users: {}", error.getMessage());

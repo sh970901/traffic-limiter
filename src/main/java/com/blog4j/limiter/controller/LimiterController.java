@@ -1,7 +1,9 @@
 package com.blog4j.limiter.controller;
 
 
+import com.blog4j.limiter.dto.GateInfo;
 import com.blog4j.limiter.dto.LimiterResult;
+import com.blog4j.limiter.frame.context.LimiterContext;
 import com.blog4j.limiter.service.LimiterService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LimiterController {
      private final LimiterService limiterService;
-     private final List<String> gateIds = new ArrayList<>();
     @GetMapping("/{gateId}/{userId}")
     public Mono<?> limiter(@PathVariable(name = "gateId") String gateId, @PathVariable(name = "userId") String userId){
         if(!isValidGateId(gateId)) return null;
@@ -27,20 +28,18 @@ public class LimiterController {
         return limiterService.limitTraffic(gateId, userId);
     }
 
+    // 조회 쪽은 따로 분리 예정
     @GetMapping("/order/{gateId}/{userId}")
     public Long userOrder(@PathVariable(name = "gateId") String gateId, @PathVariable(name = "userId") String userId){
         return limiterService.getWaitingUserOrder(gateId, userId);
     }
 
     private boolean isValidGateId(String gateId) {
-        return gateIds.contains(gateId);
-    }
-    @PostConstruct
-    public void initGateIdsInHeap(){
-        /**
-         *  값을 받아와 초기 셋팅
-         */
-        gateIds.add("12345");
+        for (GateInfo gateInfo: LimiterContext.gateInfos)
+            if (gateInfo.getGateId().equals(gateId)) {
+                return true;
+            }
+        return false;
     }
 
 

@@ -20,7 +20,7 @@ import java.security.SecureRandom;
 @Slf4j
 public class WebGate {
     private final WebClient webClient;
-    public boolean isNeedToWaiting(HttpServletRequest request, HttpServletResponse response, String gateId){
+    public boolean WG_IsNeedToWaiting(HttpServletRequest request, HttpServletResponse response, String gateId){
         String userId = WG_ReadCookie(request, "userId");
 
         if (userId == null) {
@@ -49,7 +49,7 @@ public class WebGate {
 
     }
 
-    public String WG_GetRandomString(int length) {
+    private String WG_GetRandomString(int length) {
         StringBuffer buffer = new StringBuffer();
         SecureRandom random = new SecureRandom();
 
@@ -61,7 +61,7 @@ public class WebGate {
         return buffer.toString();
     }
     /* 쿠키 저장*/
-    public void WG_WriteCookie(HttpServletResponse res, String key, String value) {
+    private void WG_WriteCookie(HttpServletResponse res, String key, String value) {
         // default cookie (auto domain)
         try {
             Cookie cookie = new Cookie(key, URLEncoder.encode(value, "UTF-8"));
@@ -73,7 +73,7 @@ public class WebGate {
         }
     }
 
-    public String WG_ReadCookie(HttpServletRequest req, String key) {
+    private String WG_ReadCookie(HttpServletRequest req, String key) {
         Cookie[] cookies = req.getCookies();
 
         if (cookies != null) {
@@ -85,8 +85,6 @@ public class WebGate {
         }
         return null;
     }
-
-
 
     private String generateUserId() {
         return RandomStringGenerator.generateRandomString(10);

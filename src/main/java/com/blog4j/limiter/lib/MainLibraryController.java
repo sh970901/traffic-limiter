@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class MainLibraryController {
 
-
     @GetMapping("/")
     @TrafficLimiter(waitingPagePath = "limiter/waiting", gateId = "12345")
     public String main(){
