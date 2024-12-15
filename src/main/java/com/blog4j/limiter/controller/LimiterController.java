@@ -19,5 +19,9 @@ public class LimiterController {
         return limiterService.limitTraffic(userId);
     }
 
+    @GetMapping("/order/{userId}")
+    public Long userOrder(@PathVariable(name = "userId") String userId){
+        return limiterService.getWaitingUserOrder(userId);
+    }
 
 }

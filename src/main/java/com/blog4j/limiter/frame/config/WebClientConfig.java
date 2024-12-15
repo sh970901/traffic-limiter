@@ -1,4 +1,4 @@
-package com.blog4j.limiter.lib;
+package com.blog4j.limiter.frame.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

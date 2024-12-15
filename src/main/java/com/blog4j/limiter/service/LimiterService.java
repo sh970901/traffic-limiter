@@ -1,20 +1,21 @@
 package com.blog4j.limiter.service;
 
 
-import com.blog4j.limiter.frame.config.RateLimiterConfig;
 import com.blog4j.limiter.dto.LimiterResult;
+import com.blog4j.limiter.frame.config.RateLimiterConfig;
 import com.blog4j.limiter.frame.context.LimiterContext;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.ConsumptionProbe;
 import io.github.bucket4j.distributed.proxy.ProxyManager;
-import java.time.LocalDateTime;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Service
 @RequiredArgsConstructor
@@ -121,5 +122,9 @@ public class LimiterService {
 
     private Long userOrder(String userId){
         return waitingRoomService.userOrder(userId).block();
+    }
+
+    public Long getWaitingUserOrder(String userId) {
+        return userOrder(userId);
     }
 }
