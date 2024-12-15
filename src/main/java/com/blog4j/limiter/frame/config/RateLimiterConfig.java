@@ -1,11 +1,9 @@
 package com.blog4j.limiter.frame.config;
 
-import com.blog4j.limiter.dto.GateInfo;
 import com.blog4j.limiter.frame.context.LimiterContext;
-import com.blog4j.limiter.frame.event.Events;
+import com.blog4j.limiter.lib.GateInfo;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BucketConfiguration;
-import io.github.bucket4j.Refill;
 import io.github.bucket4j.distributed.ExpirationAfterWriteStrategy;
 import io.github.bucket4j.redis.lettuce.cas.LettuceBasedProxyManager;
 import io.lettuce.core.RedisClient;
@@ -75,4 +73,5 @@ public class RateLimiterConfig {
 
         return ()-> LimiterContext.initGateInfos(gateInfos);
     }
+
 }

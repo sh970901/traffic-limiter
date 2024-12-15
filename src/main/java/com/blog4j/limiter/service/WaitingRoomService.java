@@ -1,7 +1,7 @@
 package com.blog4j.limiter.service;
 
-import com.blog4j.limiter.dto.GateInfo;
 import com.blog4j.limiter.frame.context.LimiterContext;
+import com.blog4j.limiter.lib.GateInfo;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

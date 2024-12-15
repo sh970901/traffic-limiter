@@ -1,5 +1,6 @@
 package com.blog4j.limiter.dto;
 
+import com.blog4j.limiter.frame.context.LimiterContext;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,10 +11,10 @@ public class LimiterResult {
     private String message;
 
     public static LimiterResult pass(){
-        return LimiterResult.from().message("접속 완료").order(0L).build();
+        return LimiterResult.from().message(LimiterContext.NO_ORDER_MESSAGE).order(LimiterContext.NO_ORDER).build();
     }
 
     public static LimiterResult wait(Long order){
-        return LimiterResult.from().message("대기열").order(order).build();
+        return LimiterResult.from().message(LimiterContext.ORDER_MESSAGE).order(order).build();
     }
 }

@@ -1,4 +1,4 @@
-package com.blog4j.limiter.dto;
+package com.blog4j.limiter.lib;
 
 import io.github.bucket4j.Bandwidth;
 import lombok.Builder;

@@ -5,6 +5,7 @@ import com.blog4j.limiter.lib.core.WebGate;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,6 +18,7 @@ import java.util.Objects;
 @Aspect
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class TrafficLimiterAspect {
 
     private final WebGate webGate;
@@ -28,7 +30,7 @@ public class TrafficLimiterAspect {
         final HttpServletResponse response = Objects.requireNonNull(servletContainer).getResponse();
 
         boolean needToWaiting = webGate.WG_IsNeedToWaiting(request, response, trafficLimiter.gateId());
-        System.out.println("####### Waiting: "+ needToWaiting);
+        log.info("####### Waiting: {}", needToWaiting);
 
         if (needToWaiting) {
             return trafficLimiter.waitingPagePath();
