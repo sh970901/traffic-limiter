@@ -27,7 +27,7 @@ public class TrafficLimiterAspect {
         final HttpServletRequest request = Objects.requireNonNull(servletContainer).getRequest();
         final HttpServletResponse response = Objects.requireNonNull(servletContainer).getResponse();
 
-        boolean needToWaiting = webGate.isNeedToWaiting(request, response);
+        boolean needToWaiting = webGate.isNeedToWaiting(request, response, trafficLimiter.gateId());
         System.out.println("####### "+ needToWaiting);
 
         if (needToWaiting) {

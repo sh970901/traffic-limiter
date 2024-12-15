@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,9 +17,10 @@ import java.security.SecureRandom;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class WebGate {
     private final WebClient webClient;
-    public boolean isNeedToWaiting(HttpServletRequest request, HttpServletResponse response){
+    public boolean isNeedToWaiting(HttpServletRequest request, HttpServletResponse response, String gateId){
         String userId = WG_ReadCookie(request, "userId");
 
         if (userId == null) {
@@ -26,17 +28,21 @@ public class WebGate {
             WG_WriteCookie(response, "userId", userId);
         }
 
-        CommonResponse<LimiterResult> result = WG_CallLimiterApi(userId);
-        LimiterResult data = result.getData();
+        CommonResponse<LimiterResult> result = WG_CallLimiterApi(gateId, userId);
+        if (result == null) {
+            log.error("ERROR GATE_ID");
+            return false;
+        }
 
+        LimiterResult data = result.getData();
         return data.getOrder() != 0;
     }
 
 
 
-    private CommonResponse<LimiterResult> WG_CallLimiterApi(String userId) {
+    private CommonResponse<LimiterResult> WG_CallLimiterApi(String gateId, String userId) {
         return webClient.get()
-                .uri("/api/v1/limiter/{userId}", userId) // URL에 PathVariable 설정
+                .uri("/api/v1/limiter/{gateId}/{userId}", gateId, userId)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<CommonResponse<LimiterResult>>() {})
                 .block();

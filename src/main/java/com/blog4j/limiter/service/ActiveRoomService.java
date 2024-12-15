@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 public class ActiveRoomService {
     private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
 
-    public Mono<Boolean> isActiveUser(String userId) {
-        return reactiveRedisTemplate.hasKey(LimiterContext.ACTIVE_ROOM + userId);
+    public Mono<Boolean> isActiveUser(String gateId, String userId) {
+        return reactiveRedisTemplate.hasKey(gateId + LimiterContext.ACTIVE_ROOM + userId);
     }
 }

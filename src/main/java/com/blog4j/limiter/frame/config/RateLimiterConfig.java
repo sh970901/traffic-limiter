@@ -46,6 +46,7 @@ public class RateLimiterConfig {
     public BucketConfiguration getBucketConfiguration(String userGroup) {
         Map<String, Bandwidth> dynamicPolicies = new HashMap<>();
 
+        dynamicPolicies.put("guest3", Bandwidth.builder().capacity(3).refillGreedy(3, Duration.ofSeconds(1)).build());
         // 사용자 그룹별 정책 // 이 부분을 설정 값에서 가져오면 좋을 듯
         dynamicPolicies.put("guest1", Bandwidth.classic(50, Refill.intervally(50, Duration.ofSeconds(1))));
         dynamicPolicies.put("guest2", Bandwidth.classic(20, Refill.intervally(20, Duration.ofSeconds(1))));
