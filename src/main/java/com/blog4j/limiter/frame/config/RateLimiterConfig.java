@@ -67,9 +67,12 @@ public class RateLimiterConfig {
          * 설정 DB에서 받아오도록 수정 필요
          */
         List<GateInfo> gateInfos = new ArrayList<>();
-        Bandwidth bandwidth =  Bandwidth.builder().capacity(3).refillGreedy(3, Duration.ofSeconds(1)).build();
-        GateInfo gateInfo = GateInfo.from().gateId("12345").bandwidth(bandwidth).build();
-        gateInfos.add(gateInfo);
+        Bandwidth baobabtraffic30 =  Bandwidth.builder().capacity(30).refillGreedy(30, Duration.ofSeconds(1)).build();
+        Bandwidth baobabtraffic50 =  Bandwidth.builder().capacity(50).refillGreedy(50, Duration.ofSeconds(1)).build();
+        GateInfo gateInfo30 = GateInfo.from().gateId("baobabtraffic30").bandwidth(baobabtraffic30).build();
+        GateInfo gateInfo50 = GateInfo.from().gateId("baobabtraffic50").bandwidth(baobabtraffic50).build();
+        gateInfos.add(gateInfo30);
+        gateInfos.add(gateInfo50);
 
         return ()-> LimiterContext.initGateInfos(gateInfos);
     }

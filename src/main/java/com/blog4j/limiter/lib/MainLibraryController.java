@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainLibraryController {
 
     @GetMapping("/")
-    @TrafficLimiter(waitingPagePath = "limiter/waiting", gateId = "12345")
+    @TrafficLimiter(waitingPagePath = "limiter/waiting", gateId = "baobabtraffic30")
     public String main(){
         return "limiter/home";
     }
