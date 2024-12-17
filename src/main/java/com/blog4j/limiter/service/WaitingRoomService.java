@@ -66,7 +66,9 @@ public class WaitingRoomService {
             String gateId = gateInfo.getGateId();
 //            startActiveQueueProcessor(5, 1, gateId);
         }
-        startActiveQueueProcessor(5, 1, "12345");
+        startActiveQueueProcessor(2, 1, "baobabtraffic3");
+        startActiveQueueProcessor(2, 1, "baobabtraffic30");
+        startActiveQueueProcessor(2, 1, "baobabtraffic50");
     }
 
     private void startActiveQueueProcessor(int second, int users, String gateId) {

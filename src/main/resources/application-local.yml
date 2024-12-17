@@ -32,6 +32,7 @@ spring:
     cache:
       host: 127.0.0.1
       port: 6379
+<<<<<<< HEAD
 
 logging:
   level:
@@ -49,3 +50,7 @@ management:
 #  docker run -d --name=consul -p 8500:8500 -p 8600:8600/udp consul:1.15
 #  docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 # RefreshScope를 붙이면 변경 사항 적용(watch), 이를 안붙이려면 cloud bus와 actuator를 활용 / watch -> consul -> queue -> refresh
+=======
+server:
+  port: 8081
+>>>>>>> 40379bc9a15e5b46a758e0c248fc767cb690055f
