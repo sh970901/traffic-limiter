@@ -1,5 +1,6 @@
 package com.blog4j.limiter.frame.config;
 
+import com.blog4j.limiter.frame.config.property.RedisCacheProperties;
 import com.blog4j.limiter.frame.context.LimiterContext;
 import com.blog4j.limiter.lib.GateInfo;
 import io.github.bucket4j.Bandwidth;
@@ -11,6 +12,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Bean;
@@ -25,11 +27,14 @@ import java.util.Map;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class RateLimiterConfig {
+
+    private final RedisCacheProperties redisCacheProperties;
 
     @Bean(name = "lettuceRedisClient")
     public RedisClient lettuceRedisClient() {
-        return RedisClient.create("redis://localhost:6379");
+        return RedisClient.create("redis://"+ redisCacheProperties.getHost() + ":" + redisCacheProperties.getPort());
     }
 
     @Bean
@@ -67,10 +72,13 @@ public class RateLimiterConfig {
          * 설정 DB에서 받아오도록 수정 필요
          */
         List<GateInfo> gateInfos = new ArrayList<>();
+        Bandwidth baobabtraffic3 =  Bandwidth.builder().capacity(3).refillGreedy(3, Duration.ofSeconds(1)).build();
         Bandwidth baobabtraffic30 =  Bandwidth.builder().capacity(30).refillGreedy(30, Duration.ofSeconds(1)).build();
         Bandwidth baobabtraffic50 =  Bandwidth.builder().capacity(50).refillGreedy(50, Duration.ofSeconds(1)).build();
+        GateInfo gateInfo3 = GateInfo.from().gateId("baobabtraffic3").bandwidth(baobabtraffic3).build();
         GateInfo gateInfo30 = GateInfo.from().gateId("baobabtraffic30").bandwidth(baobabtraffic30).build();
         GateInfo gateInfo50 = GateInfo.from().gateId("baobabtraffic50").bandwidth(baobabtraffic50).build();
+        gateInfos.add(gateInfo3);
         gateInfos.add(gateInfo30);
         gateInfos.add(gateInfo50);
 

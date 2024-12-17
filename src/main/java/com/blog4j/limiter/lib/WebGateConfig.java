@@ -18,7 +18,7 @@ public class WebGateConfig {
 
     @Bean(name = "webGateClient")
     public WebClient webGateClient(WebClient.Builder builder) {
-        return builder.baseUrl("http://localhost:8080") // 기본 URL 설정
+        return builder.baseUrl("http://localhost:8081") // 기본 URL 설정
                 .build();
     }
 

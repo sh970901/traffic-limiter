@@ -26,7 +26,8 @@ public class LimiterController {
     // 조회 쪽은 따로 분리 예정
     @GetMapping("/order/{gateId}/{userId}")
     public Long userOrder(@PathVariable(name = "gateId") String gateId, @PathVariable(name = "userId") String userId){
-        return limiterService.getWaitingUserOrder(gateId, userId);
+        Long waitingUserOrder = limiterService.getWaitingUserOrder(gateId, userId);
+        return waitingUserOrder;
     }
 
     private boolean isValidGateId(String gateId) {
