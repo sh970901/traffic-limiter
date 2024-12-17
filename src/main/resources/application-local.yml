@@ -1,4 +1,29 @@
 spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    cloud:
+      bus:
+        enabled: true
+        refresh:
+          enabled: true
+  application:
+    name: my-service
+  config:
+    import: "consul:"
+  cloud:
+    consul:
+      host: localhost  # Consul 서버 호스트
+      port: 8500       # Consul 서버 포트
+      config:
+        enabled: true  # Consul Config 활성화
+        data-key: testKey
+        watch:
+          delay: 2000
+    bus:
+      enabled: true
   main:
     banner-mode: off
   cache:
@@ -7,3 +32,20 @@ spring:
     cache:
       host: 127.0.0.1
       port: 6379
+
+logging:
+  level:
+    org.springframework.cloud.consul: DEBUG
+    org.springframework.cloud.consul.config: DEBUG
+#
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, busrefresh  # Actuator refresh 및 busrefresh 엔드포인트 노출
+
+
+
+#  docker run -d --name=consul -p 8500:8500 -p 8600:8600/udp consul:1.15
+#  docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+# RefreshScope를 붙이면 변경 사항 적용(watch), 이를 안붙이려면 cloud bus와 actuator를 활용 / watch -> consul -> queue -> refresh
