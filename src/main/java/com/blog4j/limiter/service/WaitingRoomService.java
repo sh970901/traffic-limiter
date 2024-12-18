@@ -31,7 +31,6 @@ public class WaitingRoomService {
     public Mono<Long> registerWaitingRoom(final String gateId, final String userId){
 
         long now = nowInstantSecond();
-
         return reactiveRedisTemplate.opsForZSet()
                                     .add(gateId + LimiterContext.WAITING_ROOM, userId, now)
                                     .filter(i -> i)

@@ -61,7 +61,7 @@ public class LimiterService {
              * RateLimiter 적용 후 넘치는 값을 대기큐로
              */
 
-            boolean result = rateLimiter(gateId);
+            boolean result = passThrough2RateLimiter(gateId);
 
             if (!result) {
                 return waitingRoomService.registerWaitingRoom(gateId, userId).map(LimiterResult::wait);
@@ -70,7 +70,7 @@ public class LimiterService {
         }
     }
 
-    public boolean rateLimiter(String apiKey) {
+    public boolean passThrough2RateLimiter(String apiKey) {
         Bucket bucket = getOrCreateBucket(apiKey);
           
         ConsumptionProbe probe = consumeToken(bucket);

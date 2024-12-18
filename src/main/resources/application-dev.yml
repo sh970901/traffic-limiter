@@ -1,0 +1,11 @@
+spring:
+  main:
+    banner-mode: off
+  cache:
+    type: redis
+  redis:
+    cache:
+      host: dev-redis.innocommerce.co.kr
+      port: 6379
+server:
+  port: 8080

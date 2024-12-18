@@ -1,5 +1,6 @@
 package com.blog4j.limiter.consul;
 
+import com.blog4j.limiter.frame.respose.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -14,10 +15,9 @@ public class DistributedPropertiesController {
     String value;
 
 
-
     @GetMapping("/test2")
-    public String testsE(){
+    public CommonResponse<Object> testsE(){
         System.out.println(value);
-        return "dd";
+        return CommonResponse.fail(value);
     }
 }
