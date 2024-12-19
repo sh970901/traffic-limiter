@@ -41,7 +41,7 @@
         // const queue = '[[${queue}]]';
         const userId = getCookie("userId");
         // const queryParam = new URLSearchParams({queue: queue, user_id: userId});
-        fetch('/api/v1/limiter/order/baobabtraffic30/' + userId)
+        fetch('/api/v1/limiter/order/baobabtraffic3/' + userId)
             .then(response => response.json())
             .then(result => {
                 console.log(result)
