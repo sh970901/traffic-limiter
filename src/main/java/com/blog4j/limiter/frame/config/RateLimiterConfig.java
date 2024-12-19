@@ -15,6 +15,7 @@ import io.lettuce.core.codec.StringCodec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,6 +30,9 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class RateLimiterConfig {
+
+    @Value("${tps}")
+    String tpsJsonData;
 
     private final RedisCacheProperties redisCacheProperties;
 
@@ -68,6 +72,7 @@ public class RateLimiterConfig {
 
     @Bean
     public InitializingBean gateInfoInitializer() {
+        System.out.println(tpsJsonData);
         /**
          * 설정 DB에서 받아오도록 수정 필요
          */
