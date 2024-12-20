@@ -12,4 +12,10 @@ public class WebClientConfig {
         return builder.baseUrl("http://localhost:8080") // 기본 URL 설정
                 .build();
     }
+
+    @Bean
+    public WebClient consulClient(WebClient.Builder builder) {
+        return builder.baseUrl("http://localhost:8500") // 기본 URL 설정
+                      .build();
+    }
 }
