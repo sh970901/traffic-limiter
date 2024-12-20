@@ -70,22 +70,22 @@ public class LimiterService {
         }
     }
 
-    public boolean passThrough2RateLimiter(String apiKey) {
-        Bucket bucket = getOrCreateBucket(apiKey);
+    public boolean passThrough2RateLimiter(String gateId) {
+        Bucket bucket = getOrCreateBucket(gateId);
           
         ConsumptionProbe probe = consumeToken(bucket);
 
-        loggingConsumption(apiKey, probe);
+        loggingConsumption(gateId, probe);
 
         handleNotConsumed(probe);
 
         return probe.isConsumed();
     }
 
-    private Bucket getOrCreateBucket(String apiKey) {
-        return buckets.computeIfAbsent(apiKey, key -> {
-           BucketConfiguration bucketConfig =  rateLimiterConfig.getBucketConfiguration(apiKey);
-           return proxyManager.builder().build(apiKey, bucketConfig);
+    private Bucket getOrCreateBucket(String gateId) {
+        return buckets.computeIfAbsent(gateId, key -> {
+           BucketConfiguration bucketConfig =  rateLimiterConfig.getBucketConfiguration(gateId);
+           return proxyManager.builder().build(gateId, bucketConfig);
         });
 
     }
@@ -94,9 +94,9 @@ public class LimiterService {
         return bucket.tryConsumeAndReturnRemaining(LimiterContext.TOKEN_CONSUME_COUNT);
     }
 
-    private void loggingConsumption(String remoteAddrKey, ConsumptionProbe probe) {
+    private void loggingConsumption(String gateId, ConsumptionProbe probe) {
         log.info("API Key: {}, RemoteAddress: {}, tryConsume: {}, remainToken: {}, tryTime: {}",
-            remoteAddrKey, remoteAddrKey, probe.isConsumed(), probe.getRemainingTokens(), LocalDateTime.now());
+            gateId, gateId, probe.isConsumed(), probe.getRemainingTokens(), LocalDateTime.now());
     }
 
     private void handleNotConsumed(ConsumptionProbe probe) {
@@ -105,8 +105,8 @@ public class LimiterService {
         }
     }
 
-    public long getRemainToken(String apiKey) {
-        Bucket bucket = getOrCreateBucket(apiKey);
+    public long getRemainToken(String gateId) {
+        Bucket bucket = getOrCreateBucket(gateId);
         return bucket.getAvailableTokens();
     }
 

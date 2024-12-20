@@ -1,5 +1,6 @@
 package com.blog4j.limiter.consul;
 
+import com.blog4j.limiter.frame.config.RateLimiterConfig;
 import com.blog4j.limiter.frame.respose.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,10 +15,14 @@ public class DistributedPropertiesController {
     @Value("${testKey}")
     String value;
 
+    @Autowired
+    RateLimiterConfig rateLimiterConfig;
+
 
     @GetMapping("/test2")
     public CommonResponse<Object> testsE(){
-        System.out.println(value);
+        rateLimiterConfig.getBucketConfiguration("11");
+
         return CommonResponse.fail(value);
     }
 }

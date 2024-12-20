@@ -19,7 +19,7 @@ spring:
       port: 8500       # Consul 서버 포트
       config:
         enabled: true  # Consul Config 활성화
-#        data-key: testKey
+  #        data-key: testKey
 #        watch:
 #          wait-time: 5
 #          enabled: true
@@ -51,4 +51,20 @@ management:
 #  docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 # consul k:V -> config/application-name/key
 # RefreshScope를 붙이면 변경 사항 적용(watch), 이를 안붙이려면 cloud bus와 actuator를 활용 / watch -> consul -> queue -> refresh
-
+#  {
+#    "GateInfo": [
+#      {
+#        "GateId": "11231",
+#        "GateName": "A 경로",
+#        "ServiceId": 1,
+#        "GateTps": 10
+#      },
+#      {
+#        "GateId": "1313131311",
+#        "GateName": "B 경로",
+#        "ServiceId": 2,
+#        "GateTps": 15
+#      }
+#    ]
+#
+#  }

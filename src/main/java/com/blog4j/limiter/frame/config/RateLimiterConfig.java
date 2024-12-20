@@ -14,8 +14,13 @@ import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,10 +34,11 @@ import java.util.Map;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
+@RefreshScope
 public class RateLimiterConfig {
 
     @Value("${tps}")
-    String tpsJsonData;
+    String trafficLimiterJsonData;
 
     private final RedisCacheProperties redisCacheProperties;
 
@@ -52,18 +58,11 @@ public class RateLimiterConfig {
                                        .build();
     }
 
-    /**
-     * 동적 정책을 생성하기 위한 메서드.
-     * @return 사용자별 Rate Limiting 정책을 반환
-     */
-    public BucketConfiguration getBucketConfiguration(String userGroup) {
-        Map<String, Bandwidth> dynamicPolicies = new HashMap<>();
-        for (GateInfo gateInfo : LimiterContext.gateInfos){
-            dynamicPolicies.put(gateInfo.getGateId(), gateInfo.getBandwidth());
-        }
-//        dynamicPolicies.put("guest1", Bandwidth.classic(50, Refill.intervally(50, Duration.ofSeconds(1))));
 
-        Bandwidth bandwidth = dynamicPolicies.getOrDefault(userGroup, Bandwidth.builder().capacity(3).refillGreedy(3, Duration.ofSeconds(1)).build());
+    public BucketConfiguration getBucketConfiguration(String gateId) {
+
+        Bandwidth bandwidth = LimiterContext.gateBandwidth.getOrDefault(gateId, Bandwidth.builder().capacity(300).refillGreedy(300, Duration.ofSeconds(1)).build());
+        System.out.println(bandwidth.getCapacity());
 
         return BucketConfiguration.builder()
                                   .addLimit(bandwidth)
@@ -72,22 +71,43 @@ public class RateLimiterConfig {
 
     @Bean
     public InitializingBean gateInfoInitializer() {
-        System.out.println(tpsJsonData);
-        /**
-         * 설정 DB에서 받아오도록 수정 필요
-         */
-        List<GateInfo> gateInfos = new ArrayList<>();
-        Bandwidth baobabtraffic3 =  Bandwidth.builder().capacity(3).refillGreedy(3, Duration.ofSeconds(1)).build();
-        Bandwidth baobabtraffic30 =  Bandwidth.builder().capacity(30).refillGreedy(30, Duration.ofSeconds(1)).build();
-        Bandwidth baobabtraffic50 =  Bandwidth.builder().capacity(50).refillGreedy(50, Duration.ofSeconds(1)).build();
-        GateInfo gateInfo3 = GateInfo.from().gateId("baobabtraffic3").bandwidth(baobabtraffic3).build();
-        GateInfo gateInfo30 = GateInfo.from().gateId("baobabtraffic30").bandwidth(baobabtraffic30).build();
-        GateInfo gateInfo50 = GateInfo.from().gateId("baobabtraffic50").bandwidth(baobabtraffic50).build();
-        gateInfos.add(gateInfo3);
-        gateInfos.add(gateInfo30);
-        gateInfos.add(gateInfo50);
-
+        List<GateInfo> gateInfos = getGateInfos(trafficLimiterJsonData);
         return ()-> LimiterContext.initGateInfos(gateInfos);
     }
 
+
+    public List<GateInfo> getGateInfos(String json)  {
+        List<GateInfo> gateInfos = new ArrayList<>();
+
+        JSONArray gateInfoJsonArray = getGateInfoJsonArray(json);
+
+        for (Object obj : gateInfoJsonArray) {
+            JSONObject gate = (JSONObject) obj;
+
+            // 각 필드 값 추출
+            String gateId = (String) gate.get("GateId");
+            String gateName = (String) gate.get("GateName");
+            Long tps = (Long) gate.get("GateTps");
+
+            Bandwidth traffic =  Bandwidth.builder().capacity(tps).refillGreedy(tps, Duration.ofSeconds(1)).build();
+            GateInfo gateInfo = GateInfo.from().gateId(gateId).gateName(gateName).tps(tps).bandwidth(traffic).build();
+            gateInfos.add(gateInfo);
+        }
+        return gateInfos;
+    }
+
+
+
+
+    private JSONArray getGateInfoJsonArray(String json)  {
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = null;
+
+        try {
+            jsonObject = (JSONObject) jsonParser.parse(json);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return (JSONArray) jsonObject.get("GateInfo");
+    }
 }

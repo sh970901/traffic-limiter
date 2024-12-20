@@ -9,6 +9,9 @@ import lombok.Getter;
 public class GateInfo {
 
     private String gateId;
+    private String gateName;
     private Bandwidth bandwidth;
+
+    private Long tps;
 
 }

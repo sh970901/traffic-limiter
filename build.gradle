@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation 'org.springframework.cloud:spring-cloud-starter-consul-config'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 //	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

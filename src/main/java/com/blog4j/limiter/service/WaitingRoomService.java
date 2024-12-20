@@ -61,10 +61,6 @@ public class WaitingRoomService {
      */
     @PostConstruct
     public void scheduler(){
-        for (GateInfo gateInfo :LimiterContext.gateInfos){
-            String gateId = gateInfo.getGateId();
-//            startActiveQueueProcessor(5, 1, gateId);
-        }
         startActiveQueueProcessor(2, 1, "baobabtraffic3");
         startActiveQueueProcessor(2, 1, "baobabtraffic30");
         startActiveQueueProcessor(2, 1, "baobabtraffic50");
@@ -75,7 +71,7 @@ public class WaitingRoomService {
         // 1초마다 10건씩 이동
         Flux.interval(Duration.ofSeconds(second))
             .flatMap(tick -> moveActiveRoom(gateId, users)
-                .doOnNext(count -> log.info("Moved " + count + " users to Active-Room"))
+//                .doOnNext(count -> log.info("Moved " + count + " users to Active-Room"))
                 .onErrorResume(error -> {
                     log.info("Error while moving users: {}", error.getMessage());
                     return Mono.empty();
