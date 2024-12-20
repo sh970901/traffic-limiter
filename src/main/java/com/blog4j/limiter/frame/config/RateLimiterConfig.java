@@ -62,7 +62,6 @@ public class RateLimiterConfig {
     public BucketConfiguration getBucketConfiguration(String gateId) {
 
         Bandwidth bandwidth = LimiterContext.gateBandwidth.getOrDefault(gateId, Bandwidth.builder().capacity(300).refillGreedy(300, Duration.ofSeconds(1)).build());
-        System.out.println(bandwidth.getCapacity());
 
         return BucketConfiguration.builder()
                                   .addLimit(bandwidth)

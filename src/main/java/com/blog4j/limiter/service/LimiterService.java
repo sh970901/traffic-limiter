@@ -1,6 +1,9 @@
 package com.blog4j.limiter.service;
 
 
+
+import static com.blog4j.limiter.frame.context.LimiterContext.gateBuckets;
+
 import com.blog4j.limiter.dto.LimiterResult;
 import com.blog4j.limiter.frame.config.RateLimiterConfig;
 import com.blog4j.limiter.frame.context.LimiterContext;
@@ -8,6 +11,7 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.ConsumptionProbe;
 import io.github.bucket4j.distributed.proxy.ProxyManager;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +32,6 @@ public class LimiterService {
     private final RateLimiterConfig rateLimiterConfig;
 
     private final ProxyManager<String> proxyManager;
-    private final ConcurrentMap<String, Bucket> buckets = new ConcurrentHashMap<>();
     public Mono<LimiterResult> limitTraffic(String gateId, String userId) {
 
         /**
@@ -72,9 +75,7 @@ public class LimiterService {
 
     public boolean passThrough2RateLimiter(String gateId) {
         Bucket bucket = getOrCreateBucket(gateId);
-          
         ConsumptionProbe probe = consumeToken(bucket);
-
         loggingConsumption(gateId, probe);
 
         handleNotConsumed(probe);
@@ -83,8 +84,9 @@ public class LimiterService {
     }
 
     private Bucket getOrCreateBucket(String gateId) {
-        return buckets.computeIfAbsent(gateId, key -> {
+        return gateBuckets.computeIfAbsent(gateId, key -> {
            BucketConfiguration bucketConfig =  rateLimiterConfig.getBucketConfiguration(gateId);
+
            return proxyManager.builder().build(gateId, bucketConfig);
         });
 

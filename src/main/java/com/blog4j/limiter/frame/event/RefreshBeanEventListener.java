@@ -11,6 +11,7 @@ import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.cloud.endpoint.event.RefreshEventListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,23 +22,26 @@ public class RefreshBeanEventListener {
     @Value("${tps}")
     String trafficLimiterJsonData;
     private final Environment environment;
+    private final ReactiveRedisTemplate<String, Object> redisTemplate;
 
     @EventListener(EnvironmentChangeEvent.class)
     public void onRefresh(EnvironmentChangeEvent event) {
         if (event.getKeys().contains("tps")) {
 
-            // 변경된 키 "tps"의 최신 값 가져오기
             String updatedTpsValue = environment.getProperty("tps");
 
             if (updatedTpsValue.equals(trafficLimiterJsonData)) {
-                return; // 값이 변경되지 않았으면 종료
+                return;
             }
-
             // 최신 값을 기반으로 GateInfos 생성
             List<GateInfo> gateInfos = rateLimiterConfig.getGateInfos(updatedTpsValue);
 
             // LimiterContext에 반영
             LimiterContext.initGateInfos(gateInfos);
+
+            for (GateInfo gateInfo : gateInfos){
+                redisTemplate.opsForValue().delete(gateInfo.getGateId()).block();
+            }
 
         }
     }
