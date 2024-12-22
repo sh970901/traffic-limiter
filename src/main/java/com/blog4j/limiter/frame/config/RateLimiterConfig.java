@@ -26,9 +26,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Slf4j
@@ -89,7 +87,8 @@ public class RateLimiterConfig {
             Long tps = (Long) gate.get("GateTps");
 
             Bandwidth traffic =  Bandwidth.builder().capacity(tps).refillGreedy(tps, Duration.ofSeconds(1)).build();
-            GateInfo gateInfo = GateInfo.from().gateId(gateId).gateName(gateName).tps(tps).bandwidth(traffic).build();
+//            GateInfo gateInfo = GateInfo.from().gateId(gateId).gateName(gateName).gateTps(tps).bandwidth(traffic).build();
+            GateInfo gateInfo = GateInfo.from().gateId(gateId).gateName(gateName).gateTps(tps).build();
             gateInfos.add(gateInfo);
         }
         return gateInfos;

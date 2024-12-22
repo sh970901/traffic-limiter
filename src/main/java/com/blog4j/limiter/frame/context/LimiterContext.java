@@ -1,12 +1,9 @@
 package com.blog4j.limiter.frame.context;
 
 import com.blog4j.limiter.lib.GateInfo;
-
-import com.blog4j.limiter.service.LimiterService;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.BucketConfiguration;
-import java.time.Duration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +30,7 @@ public class LimiterContext {
         Map<String, Bucket> buckets = new ConcurrentHashMap<>();
 
         for (GateInfo gateInfo : gateInfos){
-            bandwidths.put(gateInfo.getGateId(), gateInfo.getBandwidth());
+//            bandwidths.put(gateInfo.getGateId(), gateInfo.getBandwidth());
             // 버킷 맵 초기화를 동적으로 생성하도록
 //            Bandwidth bandwidth = LimiterContext.gateBandwidth.getOrDefault(gateInfo.getGateId(), Bandwidth.builder().capacity(300).refillGreedy(300, Duration.ofSeconds(1)).build());
 //
