@@ -1,10 +1,8 @@
 package com.blog4j.limiter.frame.config;
 
 import com.blog4j.limiter.frame.config.property.RedisCacheProperties;
-import com.blog4j.limiter.frame.context.LimiterContext;
 import com.blog4j.limiter.lib.GateInfo;
 import io.github.bucket4j.Bandwidth;
-import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.distributed.ExpirationAfterWriteStrategy;
 import io.github.bucket4j.redis.lettuce.cas.LettuceBasedProxyManager;
 import io.lettuce.core.RedisClient;
@@ -12,21 +10,18 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Slf4j
@@ -35,8 +30,6 @@ import java.util.List;
 @RefreshScope
 public class RateLimiterConfig {
 
-    @Value("${tps}")
-    String trafficLimiterJsonData;
 
     private final RedisCacheProperties redisCacheProperties;
 
@@ -57,20 +50,12 @@ public class RateLimiterConfig {
     }
 
 
-    public BucketConfiguration getBucketConfiguration(String gateId) {
 
-        Bandwidth bandwidth = LimiterContext.gateBandwidth.getOrDefault(gateId, Bandwidth.builder().capacity(300).refillGreedy(300, Duration.ofSeconds(1)).build());
-
-        return BucketConfiguration.builder()
-                                  .addLimit(bandwidth)
-                                  .build();
-    }
-
-    @Bean
-    public InitializingBean gateInfoInitializer() {
-        List<GateInfo> gateInfos = getGateInfos(trafficLimiterJsonData);
-        return ()-> LimiterContext.initGateInfos(gateInfos);
-    }
+//    @Bean
+//    public InitializingBean gateInfoInitializer() {
+//        List<GateInfo> gateInfos = getGateInfos(trafficLimiterJsonData);
+//        return ()-> LimiterContext.initGateInfos(gateInfos);
+//    }
 
 
     public List<GateInfo> getGateInfos(String json)  {

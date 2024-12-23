@@ -4,20 +4,15 @@ import com.blog4j.limiter.frame.config.RateLimiterConfig;
 import com.blog4j.limiter.frame.context.GateContext;
 import com.blog4j.limiter.frame.respose.CommonResponse;
 import com.blog4j.limiter.service.ConsulConfigService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RefreshScope
 public class DistributedPropertiesController {
-
-    @Value("${tps}")
-    String value;
 
     @Autowired
     RateLimiterConfig rateLimiterConfig;
@@ -25,12 +20,6 @@ public class DistributedPropertiesController {
     @Autowired
     ConsulConfigService consulConfigService;
 
-    @GetMapping("/test2")
-    public CommonResponse<Object> testsE(){
-        rateLimiterConfig.getBucketConfiguration("11");
-
-        return CommonResponse.fail(value);
-    }
 
     @GetMapping("/test3")
     public CommonResponse<Object> testsE3(){
@@ -38,7 +27,7 @@ public class DistributedPropertiesController {
 
         gateInfoMap.forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));
 
-        return CommonResponse.fail(value);
+        return CommonResponse.fail("value");
     }
 
     @GetMapping("/test4")
@@ -46,6 +35,6 @@ public class DistributedPropertiesController {
 
         GateContext.gateBuckets.forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value.getAvailableTokens()));
 
-        return CommonResponse.fail(value);
+        return CommonResponse.fail("value");
     }
 }

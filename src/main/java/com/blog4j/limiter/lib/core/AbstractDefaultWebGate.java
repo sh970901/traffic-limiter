@@ -5,10 +5,9 @@ import com.blog4j.limiter.frame.respose.CommonResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
-
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class AbstractDefaultWebGate implements WebGate {
