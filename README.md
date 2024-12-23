@@ -42,7 +42,7 @@
 
 ---
 <h3>Application Architecture</h3>
-![limiter-api-aa.png](img/limiter-api-aa.png)
+![limiter-api-aa](https://github.com/user-attachments/assets/13d99791-042d-4b3b-9407-db1b45265f65)
 
 
 ---
