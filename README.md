@@ -43,7 +43,9 @@
 ---
 <h3>Application Architecture</h3>
 
-![limiter-api-aa](https://github.com/user-attachments/assets/ca653d9a-775b-41d5-8d25-e4cc5b69d225)
+![limiter-api-aa](https://github.com/user-attachments/assets/cc7ede44-a429-472f-89c5-df7a974a3735)
+
+
 
 
 
