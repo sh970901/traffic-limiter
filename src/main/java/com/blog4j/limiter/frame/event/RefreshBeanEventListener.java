@@ -29,30 +29,32 @@ public class RefreshBeanEventListener {
 
     @EventListener(EnvironmentChangeEvent.class)
     public void onRefresh(EnvironmentChangeEvent event) {
-        if (event.getKeys().contains("tps")) {
+//        if (event.getKeys().contains("tps")) {
+//
+//            String updatedTpsValue = environment.getProperty("tps");
+//
+//            if (updatedTpsValue.equals(trafficLimiterJsonData)) {
+//                return;
+//            }
+//            // 최신 값을 기반으로 GateInfos 생성
+//            List<GateInfo> gateInfos = rateLimiterConfig.getGateInfos(updatedTpsValue);
+//
+//            // LimiterContext에 반영
+//            LimiterContext.initGateInfos(gateInfos);
+//
+//            for (GateInfo gateInfo : gateInfos){
+//                redisTemplate.opsForValue().delete(gateInfo.getGateId()).block();
+//            }
+//
+//        }
 
-            String updatedTpsValue = environment.getProperty("tps");
-
-            if (updatedTpsValue.equals(trafficLimiterJsonData)) {
-                return;
-            }
-            // 최신 값을 기반으로 GateInfos 생성
-            List<GateInfo> gateInfos = rateLimiterConfig.getGateInfos(updatedTpsValue);
-
-            // LimiterContext에 반영
-            LimiterContext.initGateInfos(gateInfos);
-
-            for (GateInfo gateInfo : gateInfos){
-                redisTemplate.opsForValue().delete(gateInfo.getGateId()).block();
-            }
-
-        }
-
-        for (String gateKey : GateContext.gateBuckets.keySet()){
+        for (String gateKey : GateContext.gatePathList){
+            System.out.println(getLastPathComponent(gateKey));
+            System.out.println(event.getKeys());
             if (event.getKeys().contains(getLastPathComponent(gateKey))) {
 
                 String updatedGateValue = environment.getProperty(getLastPathComponent(gateKey));
-                gateContext.updateGateBuckets(gateKey, updatedGateValue);
+                gateContext.updateGateBuckets(updatedGateValue);
 //                GateInfo gateInfo = null;
 //                try {
 //                    gateInfo = objectMapper.readValue(updatedGateValue, GateInfo.class);

@@ -1,6 +1,7 @@
 package com.blog4j.limiter.controller;
 
 
+import com.blog4j.limiter.frame.context.GateContext;
 import com.blog4j.limiter.frame.context.LimiterContext;
 import com.blog4j.limiter.lib.GateInfo;
 import com.blog4j.limiter.service.LimiterService;
@@ -31,11 +32,12 @@ public class LimiterController {
     }
 
     private boolean isValidGateId(String gateId) {
-        for (GateInfo gateInfo: LimiterContext.gateInfos)
-            if (gateInfo.getGateId().equals(gateId)) {
-                return true;
-            }
-        return false;
+        return true;
+//        for (GateInfo gateInfo: GateContext.gateInfos)
+//            if (gateInfo.getGateId().equals(gateId)) {
+//                return true;
+//            }
+//        return false;
     }
 
 

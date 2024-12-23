@@ -21,7 +21,7 @@ public class LimiterContext {
 
     public static List<GateInfo> gateInfos = new ArrayList<>();
     public static Map<String, Bandwidth> gateBandwidth = new HashMap<>();
-    public static Map<String, Bucket> gateBuckets = new ConcurrentHashMap<>();
+//    public static Map<String, Bucket> gateBuckets = new ConcurrentHashMap<>();
 
     public static void initGateInfos(List<GateInfo> gateInfos){
         LimiterContext.gateInfos = gateInfos;
@@ -44,7 +44,7 @@ public class LimiterContext {
         }
 
         LimiterContext.gateBandwidth = bandwidths;
-        LimiterContext.gateBuckets = buckets;
+//        LimiterContext.gateBuckets = buckets;
 
     }
 }

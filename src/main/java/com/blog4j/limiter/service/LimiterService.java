@@ -3,6 +3,7 @@ package com.blog4j.limiter.service;
 
 import com.blog4j.limiter.dto.LimiterResult;
 import com.blog4j.limiter.frame.config.RateLimiterConfig;
+import com.blog4j.limiter.frame.context.GateContext;
 import com.blog4j.limiter.frame.context.LimiterContext;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.BucketConfiguration;
@@ -16,7 +17,6 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import static com.blog4j.limiter.frame.context.LimiterContext.gateBuckets;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +25,6 @@ public class LimiterService {
 
     private final WaitingRoomService waitingRoomService;
     private final ActiveRoomService activeRoomService;
-    private final RateLimiterConfig rateLimiterConfig;
-
-    private final ProxyManager<String> proxyManager;
     public Mono<LimiterResult> limitTraffic(String gateId, String userId) {
 
         /**
@@ -70,7 +67,7 @@ public class LimiterService {
     }
 
     public boolean passThrough2RateLimiter(String gateId) {
-        Bucket bucket = getOrCreateBucket(gateId);
+        Bucket bucket = getBucket(gateId);
         ConsumptionProbe probe = consumeToken(bucket);
         loggingConsumption(gateId, probe);
 
@@ -79,13 +76,16 @@ public class LimiterService {
         return probe.isConsumed();
     }
 
-    private Bucket getOrCreateBucket(String gateId) {
-        return gateBuckets.computeIfAbsent(gateId, key -> {
-           BucketConfiguration bucketConfig =  rateLimiterConfig.getBucketConfiguration(gateId);
-
-           return proxyManager.builder().build(gateId, bucketConfig);
-        });
-
+//    private Bucket getOrCreateBucket(String gateId) {
+//        return GateContext.gateBuckets.computeIfAbsent(gateId, key -> {
+//           BucketConfiguration bucketConfig =  rateLimiterConfig.getBucketConfiguration(gateId);
+//
+//           return proxyManager.builder().build(gateId, bucketConfig);
+//        });
+//
+//    }
+    private Bucket getBucket(String gateId) {
+        return GateContext.gateBuckets.get(gateId);
     }
 
     private ConsumptionProbe consumeToken(Bucket bucket) {
@@ -104,7 +104,7 @@ public class LimiterService {
     }
 
     public long getRemainToken(String gateId) {
-        Bucket bucket = getOrCreateBucket(gateId);
+        Bucket bucket = getBucket(gateId);
         return bucket.getAvailableTokens();
     }
 

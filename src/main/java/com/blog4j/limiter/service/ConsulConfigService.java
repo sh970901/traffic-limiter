@@ -24,9 +24,9 @@ public class ConsulConfigService {
      * Gate Keys
      * @return
      */
-    private List<String> getGateInfoKeys(){
+    public List<String> getGateInfoKeys(){
         return consulClient.get()
-                                        .uri("http://localhost:8500/v1/kv/config/limiter-api/gate?keys")
+                                        .uri("http://localhost:8500/v1/kv/config/limiter-api/gate/?keys")
                                         .retrieve()
                                         .bodyToMono(new ParameterizedTypeReference<List<String>>() {})
                                         .block();

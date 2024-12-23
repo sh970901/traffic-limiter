@@ -60,7 +60,7 @@ public class WaitingRoomService {
      */
     @PostConstruct
     public void scheduler(){
-        startActiveQueueProcessor(2, 1, "baobabtraffic3");
+        startActiveQueueProcessor(2, 1, "1313131311");
         startActiveQueueProcessor(2, 1, "baobabtraffic30");
         startActiveQueueProcessor(2, 1, "baobabtraffic50");
     }
