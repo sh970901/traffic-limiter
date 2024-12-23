@@ -1,21 +1,14 @@
 package com.blog4j.limiter.service;
 
-import com.blog4j.limiter.config.property.ConsulHostProperties;
+import com.blog4j.limiter.context.GateContext;
 import com.ecwid.consul.v1.ConsulClient;
-import com.ecwid.consul.v1.ConsulRawClient;
 import com.ecwid.consul.v1.Response;
 import com.ecwid.consul.v1.kv.model.GetValue;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.consul.ConsulAutoConfiguration;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +24,7 @@ public class ConsulConfigService {
      */
     public List<String> getGateInfoKeys(){
 
-        Response<List<String>> kvKeysOnly = consulClient.getKVKeysOnly("/config/limiter-api/gate");
+        Response<List<String>> kvKeysOnly = consulClient.getKVKeysOnly(GateContext.GATE_KEY_PREFIX);
         return kvKeysOnly.getValue();
 //        for (String key : value){
 //            System.out.println(key);

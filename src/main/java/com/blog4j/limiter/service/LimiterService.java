@@ -1,8 +1,8 @@
 package com.blog4j.limiter.service;
 
-import com.blog4j.limiter.dto.LimiterResult;
 import com.blog4j.limiter.context.GateContext;
 import com.blog4j.limiter.context.LimiterContext;
+import com.blog4j.limiter.dto.LimiterResult;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;
 import java.time.LocalDateTime;
