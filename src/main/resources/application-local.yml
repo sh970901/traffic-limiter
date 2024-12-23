@@ -43,7 +43,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health  # Actuator refresh 및 busrefresh 엔드포인트 노출
+        include: refresh, health, prometheus  # Actuator refresh 및 busrefresh 엔드포인트 노출
 
 server:
   host:

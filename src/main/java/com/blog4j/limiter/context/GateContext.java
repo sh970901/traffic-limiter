@@ -52,6 +52,7 @@ public class GateContext {
 
             GateInfo gateInfo = objectMapper.readValue(gateInfoJsonValue, GateInfo.class);
 
+
             // 기존 사용한 토큰 수 맞추기
             Bucket originBucket = GateContext.gateBuckets.getOrDefault(gateInfo.getGateId(), null);
 

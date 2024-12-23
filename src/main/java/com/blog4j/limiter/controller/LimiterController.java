@@ -1,5 +1,6 @@
 package com.blog4j.limiter.controller;
 
+import com.blog4j.limiter.context.GateContext;
 import com.blog4j.limiter.service.LimiterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +29,8 @@ public class LimiterController {
     }
 
     private boolean isValidGateId(String gateId) {
-        return true;
-//        for (GateInfo gateInfo: GateContext.gateInfos)
+        return GateContext.gateBuckets.get(gateId) != null;
+        //        for (GateInfo gateInfo: GateContext.gateInfos)
 //            if (gateInfo.getGateId().equals(gateId)) {
 //                return true;
 //            }

@@ -27,9 +27,4 @@ public class WebGateConfig {
                 .build();
     }
 
-//    @Bean
-//    @Primary
-//    public WebGate defaultWebGate2(WebClient webClient) {
-//        return new DefaultWebGate2(webClient);
-//    }
 }

@@ -19,7 +19,7 @@ public class CommonResponseWrapper implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        if(request.getURI().getPath().contains("swagger") ||request.getURI().getPath().contains("api-docs")) {
+        if(request.getURI().getPath().contains("swagger") || request.getURI().getPath().contains("api-docs") || request.getURI().getPath().contains("prometheus")) {
             return body;
         }
         return body instanceof CommonResponse<?> ? body : CommonResponse.from().data(body).build();

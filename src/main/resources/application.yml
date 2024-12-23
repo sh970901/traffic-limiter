@@ -1,7 +1,0 @@
-#spring:
-#  application:
-#    name: my-service  # 서비스 이름
-#  cloud:
-#    consul:
-#      host: localhost  # Consul 서버 호스트
-#      port: 8500       # Consul 서버 포트

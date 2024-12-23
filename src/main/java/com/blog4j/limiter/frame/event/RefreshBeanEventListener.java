@@ -19,25 +19,13 @@ public class RefreshBeanEventListener {
 
         for (String gateKey : GateContext.gatePathList){
             String formatKey = formatKey(gateKey, GateContext.GATE_KEY_PREFIX);
-
+            System.out.println(event.getKeys());
             if (event.getKeys().contains(formatKey)) {
 
                 String updatedGateValue = environment.getProperty(formatKey);
                 gateContext.updateGateBuckets(updatedGateValue);
             }
         }
-    }
-    private String getLastPathComponent(String path) {
-        if (path == null || path.isEmpty()) {
-            return path;
-        }
-        int lastSeparatorIndex = path.lastIndexOf('/');
-        if (lastSeparatorIndex == -1) {
-            // 구분자가 없는 경우 전체 문자열 반환
-            return path;
-        }
-        // 마지막 구분자 이후의 부분 반환
-        return path.substring(lastSeparatorIndex + 1);
     }
 
     public static String formatKey(String originalKey, String prefixToRemove) {
@@ -61,4 +49,18 @@ public class RefreshBeanEventListener {
 
         return formattedKey;
     }
+
+
+//    private String getLastPathComponent(String path) {
+//        if (path == null || path.isEmpty()) {
+//            return path;
+//        }
+//        int lastSeparatorIndex = path.lastIndexOf('/');
+//        if (lastSeparatorIndex == -1) {
+//            // 구분자가 없는 경우 전체 문자열 반환
+//            return path;
+//        }
+//        // 마지막 구분자 이후의 부분 반환
+//        return path.substring(lastSeparatorIndex + 1);
+//    }
 }
