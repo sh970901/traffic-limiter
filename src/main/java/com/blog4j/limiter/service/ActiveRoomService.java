@@ -1,6 +1,6 @@
 package com.blog4j.limiter.service;
 
-import com.blog4j.limiter.frame.context.LimiterContext;
+import com.blog4j.limiter.context.LimiterContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;

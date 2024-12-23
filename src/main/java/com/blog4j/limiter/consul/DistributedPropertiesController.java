@@ -1,7 +1,7 @@
 package com.blog4j.limiter.consul;
 
-import com.blog4j.limiter.frame.config.RateLimiterConfig;
-import com.blog4j.limiter.frame.context.GateContext;
+import com.blog4j.limiter.config.RateLimiterConfig;
+import com.blog4j.limiter.context.GateContext;
 import com.blog4j.limiter.frame.respose.CommonResponse;
 import com.blog4j.limiter.service.ConsulConfigService;
 import java.util.Map;

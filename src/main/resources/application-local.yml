@@ -15,8 +15,8 @@ spring:
     import: "consul:"
   cloud:
     consul:
-      host: localhost  # Consul 서버 호스트
-      port: 8500       # Consul 서버 포트
+      host: localhost
+      port: 8500
       config:
         enabled: true  # Consul Config 활성화
   #        data-key: testKey
@@ -44,6 +44,19 @@ management:
     web:
       exposure:
         include: refresh, health  # Actuator refresh 및 busrefresh 엔드포인트 노출
+
+server:
+  host:
+    consul:
+      host: http://127.0.0.1
+      port: 8500
+    webgate:
+      host: http://127.0.0.1
+      port: 8080
+    redis:
+      session:
+        host: 127.0.0.1
+        port: 6379
 
 
 

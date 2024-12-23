@@ -1,6 +1,6 @@
-package com.blog4j.limiter.frame.config;
+package com.blog4j.limiter.config;
 
-import com.blog4j.limiter.frame.config.property.RedisCacheProperties;
+import com.blog4j.limiter.config.property.RedisSessionProperties;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
 import java.time.Duration;
@@ -23,7 +23,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class CacheConfig {
 
-    private final RedisCacheProperties redisCacheProperties;
+    private final RedisSessionProperties redisSessionProperties;
 
     @Bean("reactiveRedisConnectionFactory")
     public ReactiveRedisConnectionFactory reactiveRedisConnectionFactory(ClientResources clientResources) {
@@ -35,7 +35,7 @@ public class CacheConfig {
                                       .build();
 
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(
-            redisCacheProperties.getHost(), redisCacheProperties.getPort());
+            redisSessionProperties.getHost(), redisSessionProperties.getPort());
         redisStandaloneConfiguration.setPassword(""); // 비밀번호 설정 가능
 
         return new LettuceConnectionFactory(redisStandaloneConfiguration, lettuceClientConfiguration);

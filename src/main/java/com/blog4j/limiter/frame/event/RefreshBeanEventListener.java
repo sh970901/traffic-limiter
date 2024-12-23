@@ -1,6 +1,6 @@
 package com.blog4j.limiter.frame.event;
 
-import com.blog4j.limiter.frame.context.GateContext;
+import com.blog4j.limiter.context.GateContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.context.event.EventListener;

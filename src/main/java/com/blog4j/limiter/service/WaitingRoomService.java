@@ -1,6 +1,6 @@
 package com.blog4j.limiter.service;
 
-import com.blog4j.limiter.frame.context.LimiterContext;
+import com.blog4j.limiter.context.LimiterContext;
 import jakarta.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.Instant;

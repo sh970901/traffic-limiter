@@ -45,6 +45,7 @@ public class DefaultWebGate extends AbstractDefaultWebGate {
      */
     @Override
     public CommonResponse<LimiterResult> WG_CallLimiterApi(String gateId, String userId) {
+
         return webGateClient.get()
                 .uri("/api/v1/limiter/{gateId}/{userId}", gateId, userId)
                 .retrieve()

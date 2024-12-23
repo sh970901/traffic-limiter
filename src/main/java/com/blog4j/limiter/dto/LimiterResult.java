@@ -1,6 +1,6 @@
 package com.blog4j.limiter.dto;
 
-import com.blog4j.limiter.frame.context.LimiterContext;
+import com.blog4j.limiter.context.LimiterContext;
 import lombok.Builder;
 import lombok.Data;
 

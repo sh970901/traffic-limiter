@@ -1,4 +1,4 @@
-package com.blog4j.limiter.frame.context;
+package com.blog4j.limiter.context;
 
 import com.blog4j.limiter.lib.GateInfo;
 import com.blog4j.limiter.service.ConsulConfigService;

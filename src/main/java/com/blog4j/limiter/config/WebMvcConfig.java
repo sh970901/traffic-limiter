@@ -1,4 +1,4 @@
-package com.blog4j.limiter.frame.config;
+package com.blog4j.limiter.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

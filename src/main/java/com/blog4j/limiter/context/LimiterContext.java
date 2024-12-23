@@ -1,4 +1,4 @@
-package com.blog4j.limiter.frame.context;
+package com.blog4j.limiter.context;
 
 public class LimiterContext {
     public static final Long NO_ORDER = 0L;

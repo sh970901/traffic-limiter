@@ -1,6 +1,6 @@
-package com.blog4j.limiter.frame.config;
+package com.blog4j.limiter.config;
 
-import com.blog4j.limiter.frame.config.property.RedisCacheProperties;
+import com.blog4j.limiter.config.property.RedisSessionProperties;
 import com.blog4j.limiter.lib.GateInfo;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.distributed.ExpirationAfterWriteStrategy;
@@ -31,11 +31,11 @@ import org.springframework.context.annotation.Configuration;
 public class RateLimiterConfig {
 
 
-    private final RedisCacheProperties redisCacheProperties;
+    private final RedisSessionProperties redisSessionProperties;
 
     @Bean(name = "lettuceRedisClient")
     public RedisClient lettuceRedisClient() {
-        return RedisClient.create("redis://"+ redisCacheProperties.getHost() + ":" + redisCacheProperties.getPort());
+        return RedisClient.create("redis://"+ redisSessionProperties.getHost() + ":" + redisSessionProperties.getPort());
     }
 
     @Bean
