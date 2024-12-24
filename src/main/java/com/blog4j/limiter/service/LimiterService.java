@@ -71,14 +71,6 @@ public class LimiterService {
         return probe.isConsumed();
     }
 
-//    private Bucket getOrCreateBucket(String gateId) {
-//        return GateContext.gateBuckets.computeIfAbsent(gateId, key -> {
-//           BucketConfiguration bucketConfig =  rateLimiterConfig.getBucketConfiguration(gateId);
-//
-//           return proxyManager.builder().build(gateId, bucketConfig);
-//        });
-//
-//    }
     private Bucket getBucket(String gateId) {
         return GateContext.gateBuckets.get(gateId);
     }
