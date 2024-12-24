@@ -19,7 +19,6 @@ public class RefreshBeanEventListener {
 
         for (String gateKey : GateContext.gatePathList){
             String formatKey = formatKey(gateKey, GateContext.GATE_KEY_PREFIX);
-            System.out.println(event.getKeys());
             if (event.getKeys().contains(formatKey)) {
 
                 String updatedGateValue = environment.getProperty(formatKey);
