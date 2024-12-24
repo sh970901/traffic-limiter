@@ -6,26 +6,26 @@
 		</encoder>
 	</appender>
 
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>/home/ec2-user/applications/logback/output.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-      <FileNamePattern>/home/ec2-user/applications/logback/output_%d{yyyyMMdd}.%i.log</FileNamePattern>
-      <maxFileSize>300MB</maxFileSize>
-      <maxHistory>14</maxHistory>
-    </rollingPolicy>
-    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern> # %d{MM-dd HH:mm:ss.SSS} [%thread] [%-5level] %logger{25} - %message%n</pattern>
-    </encoder>
-  </appender>
+<!--  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--    <file>/home/ec2-user/applications/logback/output.log</file>-->
+<!--    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
+<!--      <FileNamePattern>/home/ec2-user/applications/logback/output_%d{yyyyMMdd}.%i.log</FileNamePattern>-->
+<!--      <maxFileSize>300MB</maxFileSize>-->
+<!--      <maxHistory>14</maxHistory>-->
+<!--    </rollingPolicy>-->
+<!--    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+<!--      <pattern> # %d{MM-dd HH:mm:ss.SSS} [%thread] [%-5level] %logger{25} - %message%n</pattern>-->
+<!--    </encoder>-->
+<!--  </appender>-->
 
-  <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="FILE" />
-  </appender>
+<!--  <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">-->
+<!--    <appender-ref ref="FILE" />-->
+<!--  </appender>-->
 
 	<root level="INFO">
 
 		<appender-ref ref="CONSOLE" />
-    <appender-ref ref="ASYNC_FILE"/>
+<!--    <appender-ref ref="ASYNC_FILE"/>-->
 	</root>
 
 </configuration>

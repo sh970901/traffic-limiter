@@ -51,7 +51,7 @@
 <h3>DownLoad</h3>
 
 ```
-1. Limiter-API
+1. Limiter-Api
 2. Limiter-Batch
 3. Limiter-Order-API
 4. Consul 
@@ -61,11 +61,11 @@
 <h4> Docker</h4>
 
 ```
-1. 
+
 ```
 
 <h4>Docker Compose</h4>
-1. docker-compose.yml
+docker-compose.yml
 ```
 
 ```
@@ -85,19 +85,100 @@
 
 ---
 
+<h3>유입 제어</h3>
 
-<h3> Request Data </h3>
+<h4> Request </h4>
+gateId: 생성한 GateID 값 </br>
+userId: 사용자 식별 값 (예시 lib/core/AbstractDefaultWebGate 참고)
 
 ```
+GET /api/v1/limiter/{gateId}/{userId}
+```
 
+
+<h4> Response </h4>
+
+```
+{
+    "resultCode": "200",
+    "resultMessage": "success",
+    "data": {
+        "order": 0,
+        "message": "접속 완료"
+    }
+}
+```
+```
+
+{
+    "resultCode": "200",
+    "resultMessage": "success",
+    "data": {
+        "order": 1,
+        "message": "대기열 진입"
+    }
+}
+```
+---
+<h3>순번 확인</h3>
+
+<h4> Request </h4>
+gateId: 생성한 GateID 값 </br>
+userId: 사용자 식별 값 (예시 lib/core/AbstractDefaultWebGate 참고)
+
+```
+GET /api/v1/limiter/order/{gateId}/{userId}
+```
+
+<h4> Response </h4>
+
+```
+{
+    "resultCode": "200",
+    "resultMessage": "success",
+    "data": 1
+}
+```
+---
+<h3>Consul 설정</h3> 
+
+<h4>key</h3> 
+```
+config/{application-name}/gate/gateA/{gatename}
+```
+<h4>value</h3> 
+```
+{
+    "GateId": "생성할 게이트 ID 값",
+    "GateName": "B 경로",
+    "ServiceId": 2,
+    "GateTps": 5
+}
+```
+---
+<h3>적용</h3>
+
+적용은 AOP, Interceptor, Filter 등 다양하게 활용 가능
+
+어노테이션을 활용한 간단 적용 예시</br>
+lib/aop/TrafficLimiterAspect 참고
+```
+@GetMapping("/")
+@TrafficLimiter(waitingPagePath = "대기 시 노출할 페이지 Path", gateId = "{고유한 게이트 ID 값}")
+public String main(){
+    return "limiter/home";
+}
 ```
 
 ---
+결과 화면
 
-<h3> Response Data </h3>
+1초에 5번의(GateTps) 요청 발생 시 대기
 
-```
-```
----
+사용자에게 대기 순번을 표시하고 차례대로 접근
 
----
+![Limiter-api-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/12ef4b83-ff53-42cc-8144-2b44052fe517)
+
+한번 유입된 사용자는 지정한 시간(TTL)동안 대기없이 접근 가능
+![Limiter-api-order-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/bf037c2a-ce48-4179-b889-de65ed1d0501)
+
