@@ -66,6 +66,7 @@
 
 <h4>Docker Compose</h4>
 docker-compose.yml
+
 ```
 
 ```
@@ -143,10 +144,12 @@ GET /api/v1/limiter/order/{gateId}/{userId}
 <h3>Consul 설정</h3> 
 
 <h4>key</h3> 
+
 ```
 config/{application-name}/gate/gateA/{gatename}
 ```
 <h4>value</h3> 
+
 ```
 {
     "GateId": "생성할 게이트 ID 값",
@@ -160,8 +163,7 @@ config/{application-name}/gate/gateA/{gatename}
 
 적용은 AOP, Interceptor, Filter 등 다양하게 활용 가능
 
-어노테이션을 활용한 간단 적용 예시</br>
-lib/aop/TrafficLimiterAspect 참고
+어노테이션을 활용한 간단 적용 (예시 lib/aop/TrafficLimiterAspect 참고)
 ```
 @GetMapping("/")
 @TrafficLimiter(waitingPagePath = "대기 시 노출할 페이지 Path", gateId = "{고유한 게이트 ID 값}")
