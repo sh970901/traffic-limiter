@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: traffic-gateway
+  config:
+    import: "consul:"
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      config:
+        enabled: true
+  threads:
+    virtual:
+      enabled: true
