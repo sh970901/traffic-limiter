@@ -1,7 +1,12 @@
 services:
   consul:
     image: consul:1.15
-    container_name: consul2
+    container_name: consul
     ports:
       - "8500:8500"
     command: "consul agent -dev -client=0.0.0.0"
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
