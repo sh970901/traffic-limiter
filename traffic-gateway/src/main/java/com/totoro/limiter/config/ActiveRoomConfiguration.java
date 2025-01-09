@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
@@ -18,7 +19,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableAutoConfiguration(exclude={RedisAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude={RedisAutoConfiguration.class})
 public class ActiveRoomConfiguration {
     private final ActiveRoomProperties activeRoomProperties;
 
@@ -30,7 +31,13 @@ public class ActiveRoomConfiguration {
         LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
                                                                             .clientResources(clientResources)
                                                                             .build();
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(activeRoomProperties.getHost(), activeRoomProperties.getPort()), clientConfig);
+
+        LettuceConnectionFactory redisConnectionFactory = new LettuceConnectionFactory(new RedisStandaloneConfiguration(activeRoomProperties.getHost(), activeRoomProperties.getPort()), clientConfig);
+        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("redis-");
+        executor.setVirtualThreads(true);
+        redisConnectionFactory.setExecutor(executor);
+
+        return redisConnectionFactory;
     }
 
     @Bean

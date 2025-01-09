@@ -31,7 +31,7 @@ public class ActiveUserScheduler {
 //        log.info(String.valueOf(Thread.currentThread().isVirtual()));
         for (String gateId : GateContext.gateBuckets.keySet()) {
             long availableTokens = GateContext.gateBuckets.get(gateId).getAvailableTokens();
-            moveActiveRoom(gateId,1);
+            moveActiveRoom(gateId,100);
         }
 
     }

@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Lettuce;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -23,7 +25,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@EnableAutoConfiguration(exclude={RedisAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude={RedisAutoConfiguration.class})
 @RequiredArgsConstructor
 public class WaitingRoomConfiguration {
     private final WaitingRoomProperties waitingRoomProperties;
@@ -32,12 +34,19 @@ public class WaitingRoomConfiguration {
     public RedisConnectionFactory waitingConnectionFactory() {
         DefaultClientResources clientResources = DefaultClientResources.builder()
                                                                        .build();
-
         LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
                                                                             .clientResources(clientResources)
                                                                             .build();
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(waitingRoomProperties.getHost(), waitingRoomProperties.getPort()), clientConfig);
+
+        LettuceConnectionFactory redisConnectionFactory = new LettuceConnectionFactory(new RedisStandaloneConfiguration(waitingRoomProperties.getHost(), waitingRoomProperties.getPort()), clientConfig);
+        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("redis-");
+        executor.setVirtualThreads(true);
+        redisConnectionFactory.setExecutor(executor);
+
+        return redisConnectionFactory;
     }
+
+
 
     @Bean
     @Primary

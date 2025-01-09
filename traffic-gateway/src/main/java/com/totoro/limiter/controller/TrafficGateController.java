@@ -51,6 +51,7 @@ public class TrafficGateController {
 
     @GetMapping("/{gateId}/{userId}")
     public TrafficGateResult trafficLimiter(@PathVariable(name = "gateId") String gateId, @PathVariable(name = "userId") String userId){
+        log.info(Thread.currentThread().toString());
         if(!isValidGateId(gateId)) return null;
         return trafficGateService.checkTraffic(gateId, userId);
     }

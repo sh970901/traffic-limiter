@@ -1,8 +1,7 @@
 spring:
-#  data:
-#    redis:
-#      host: 127.0.0.1
-#      port: 6379
+  data:
+    redis:
+      .ser
   docker:
     compose:
       enabled: false
@@ -20,7 +19,11 @@ spring:
     virtual:
       enabled: true
 
+
 server:
+  tomcat:
+    threads:
+      max: 10
   redis:
     bucket:
       host: 127.0.0.1
@@ -32,3 +35,11 @@ server:
       host: 127.0.0.1
       port: 6379
 
+#  Key / Values
+#  config/traffic-gateway/gate/gateA
+#  {
+#    "GateId": "1313131311",
+#    "GateName": "B 경로",
+#    "ServiceId": 2,
+#     "GateTps": 3
+#  }

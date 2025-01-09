@@ -9,11 +9,13 @@ import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.resource.DefaultClientResources;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
@@ -30,7 +32,14 @@ public class BucketConfiguration {
 
     @Bean(name = "lettuceRedisClient")
     public RedisClient lettuceRedisClient() {
-        return RedisClient.create("redis://"+ bucketProperties.getHost() + ":" + bucketProperties.getPort());
+        DefaultClientResources clientResources = DefaultClientResources.builder()
+                                                                       .eventExecutorGroup(new DefaultEventExecutorGroup(Runtime.getRuntime().availableProcessors(), Thread.ofVirtual().factory()))
+                                                                       .build();
+//        DefaultClientResources clientResources = DefaultClientResources.builder()
+//                                                                       .build();
+
+        return RedisClient.create(clientResources,
+            "redis://" + bucketProperties.getHost() + ":" + bucketProperties.getPort());
     }
 
     @Bean
@@ -62,6 +71,10 @@ public class BucketConfiguration {
         LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
                                                                             .clientResources(clientResources)
                                                                             .build();
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(bucketProperties.getHost(), bucketProperties.getPort()), clientConfig);
+        LettuceConnectionFactory redisConnectionFactory = new LettuceConnectionFactory(new RedisStandaloneConfiguration(bucketProperties.getHost(), bucketProperties.getPort()), clientConfig);
+        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("redis-");
+        executor.setVirtualThreads(true);
+        redisConnectionFactory.setExecutor(executor);
+        return redisConnectionFactory;
     }
 }
